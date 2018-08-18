@@ -1,17 +1,49 @@
 <?php
 /**
- * Front to the WordPress application. This file doesn't do anything, but loads
- * wp-blog-header.php which does and tells WordPress to load the theme.
+ *    The template for dispalying the index.
  *
- * @package WordPress
- */
+ * @package    WordPress
+ * @subpackage illdy
 
-/**
- * Tells WordPress to load the WordPress theme and output it.
- *
- * @var bool
  */
-define('WP_USE_THEMES', true);
+?>
+<?php get_header(); ?>
+	<div class="container">
+	<div class="row">
 
-/** Loads the WordPress Environment and Template */
-require( dirname( __FILE__ ) . '/wp-blog-header.php' );
+		<?php if ( is_active_sidebar( 'blog-sidebar' ) ) { ?>
+		<div class="col-sm-8">
+			<?php } else { ?>
+			<div class="col-sm-8 col-sm-offset-2">
+				<?php } ?>
+
+				<section id="blog">
+					<?php do_action( 'illdy_above_content_after_header' ); ?>
+					<?php
+					if ( have_posts() ) :
+						while ( have_posts() ) :
+							the_post();
+							get_template_part( 'template-parts/content', get_post_format() );
+						endwhile;
+						wp_reset_query();
+					else :
+						get_template_part( 'template-parts/content', 'none' );
+					endif;
+					?>
+					<?php do_action( 'illdy_after_content_above_footer' ); ?>
+				</section><!--/#blog-->
+			</div><!--/.col-sm-7/12-->
+
+			<?php if ( is_active_sidebar( 'blog-sidebar' ) ) { ?>
+				<div class="col-sm-4">
+					<div id="sidebar">
+						<?php dynamic_sidebar( 'blog-sidebar' ); ?>
+					</div>
+				</div>
+			<?php } ?>
+
+
+
+		</div><!--/.row-->
+	</div><!--/.container-->
+<?php get_footer(); ?>
